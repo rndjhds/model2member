@@ -29,6 +29,7 @@
 			<td colspan=2 align=center>
 				<input type="button" value="회원가입" 
 				       onClick="location.href='<%=request.getContextPath()%>/MemberForm.do' ">
+				       <!-- model2이기떄문에 controller로 갔다가 가야한다. -->
 				<input type="submit" value="로그인">
 				<input type="reset" value="취소">
 			</td>

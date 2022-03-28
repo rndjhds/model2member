@@ -4,6 +4,7 @@ package dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -65,6 +66,40 @@ public class MemberDAO {
 		}catch (Exception e) {
 			e.printStackTrace();
 		}finally {
+			if(pstmt != null) try {pstmt.close();}catch(Exception e) {}
+			if(con != null) try {con.close();}catch(Exception e) {}
+		}
+		
+		return result;
+	}
+	
+	
+	//ID중복 검사(ajax)
+	public int idcheck(String id) {
+		int result = 0;
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			con = getConnection();
+			
+			String sql = "select * from member2 where id=?";
+			
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, id);
+			rs = pstmt.executeQuery();	// SQL문 실행
+			
+			if(rs.next()) {	// 중복 ID
+				result = 1;
+			}else {	// 사용 가능한 ID
+				result = -1;
+			}
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			if(rs != null) try {rs.close();}catch(Exception e) {}
 			if(pstmt != null) try {pstmt.close();}catch(Exception e) {}
 			if(con != null) try {con.close();}catch(Exception e) {}
 		}

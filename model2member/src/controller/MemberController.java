@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import service.Action;
 import service.ActionForward;
+import service.Idcheck;
 import service.MemberInsert;
 
 @WebServlet("*.do")	// do 확장자로 요청하는 요청을 받는다는 의미
@@ -42,6 +43,22 @@ public class MemberController extends HttpServlet {
 			}catch (Exception e) {
 				e.printStackTrace();
 			}
+			
+		// ID중복 검사(ajax) : 비동기 처리방식은 조금 다르다(서비스 패키지확인)
+		}else if(command.equals("/Idcheck.do")) {
+			try {
+				action = new Idcheck();
+				forward = action.execute(request, response);
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+		// 회원가입 폼
+		}else if(command.equals("/MemberForm.do")) {
+			// DB에 연결하는 것이 아니라서 Action객체(서비스 클래스) 생성x
+			forward = new ActionForward();
+			forward.setRedirect(false);
+			forward.setPath("./member/memberform.jsp");
 		}
 		
 		// 포워딩 처리

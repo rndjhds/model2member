@@ -15,7 +15,7 @@ $(document).ready(function(){
 				url:"/model2member/Idcheck.do",
 				data:{"id":id},
 				datatype:"text",
-				success:function(data){
+				success:function(data){	// 콜백함수
 //					alert(data);
 					
 					if(data==1){	// 중복 ID
