@@ -1,19 +1,24 @@
 package service;
 
+import java.io.PrintWriter;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import dao.MemberDAO;
 import model.MemberDTO;
 
-public class MemberInsert implements Action {
+public class Update implements Action{
 
 	@Override
 	public ActionForward execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		// TODO Auto-generated method stub
-		System.out.println("MemberInsert");
+		System.out.println("Update");
 		
+		response.setContentType("text/html; charset=utf-8");
 		request.setCharacterEncoding("utf-8");
+		
+		PrintWriter out =  response.getWriter();
 		
 		MemberDTO member = new MemberDTO();
 		member.setId(request.getParameter("id"));
@@ -42,15 +47,26 @@ public class MemberInsert implements Action {
 		member.setHobby(h);
 		member.setIntro(request.getParameter("intro"));
 		
-		// DB연결
 		MemberDAO dao = MemberDAO.getInstance();
-		int result = dao.insert(member);	// 회원가입
+		MemberDTO old = dao.getMember(member.getId());	// 1명 상세정보 구하기
 		
-		if(result == 1) System.out.println("회원가입 성공");
-
+		// 비번 비교
+		if(old.getPasswd().equals(member.getPasswd())) {	// 비번 일치시
+			int result = dao.update(member);	// update SQL문 실행
+			if(result == 1) System.out.println("회원 수정 성공");
+		}else {	// 비번 불일치시
+			out.println("<script>");
+			out.println("alert('비번이 일치하지 않습니다.');");
+			out.println("history.go(-1);");
+			out.println("</script>");
+			out.close();
+			
+			return null;
+		}
+		
 		ActionForward forward = new ActionForward();
-		forward.setRedirect(false);	// dispatcher 방식으로 포워딩
-		forward.setPath("./member/loginform.jsp");	// 포워딩할 파일명(기준 : WebContent)
+		forward.setRedirect(false);
+		forward.setPath("./member/main.jsp");
 		
 		return forward;
 	}

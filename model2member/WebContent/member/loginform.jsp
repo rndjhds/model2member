@@ -15,7 +15,7 @@
 	<body>
 	
 	<form method="post" action="<%=request.getContextPath() %>/Login.do">
-	<table border=1 width=350 align=center>
+	<table border=1 width=300 align=center>
 		<caption>로그인</caption>
 		<tr>
 			<td>ID</td>	
